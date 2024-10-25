@@ -28,5 +28,8 @@ module.exports = {
     'no-unused-vars': 'off',
     'indent': 'off',
     'no-console': 'off',
+    'import/prefer-default-export': 'off',
+    'object-curly-newline': 'off',
+    'no-underscore-dangle': 'off',
   },
 };

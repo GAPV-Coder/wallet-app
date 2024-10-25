@@ -1,0 +1,45 @@
+<definitions name="WalletService" targetNamespace="http://example.com/wallet"
+             xmlns:tns="http://example.com/wallet"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <message name="RegisterClientRequest">
+    <part name="document" type="xsd:string"/>
+    <part name="name" type="xsd:string"/>
+    <part name="email" type="xsd:string"/>
+    <part name="phone" type="xsd:string"/>
+  </message>
+  
+  <message name="RegisterClientResponse">
+    <part name="success" type="xsd:boolean"/>
+    <part name="code_error" type="xsd:string"/>
+    <part name="message_error" type="xsd:string"/>
+    <part name="data" type="xsd:string"/>
+  </message>
+
+  <portType name="WalletPortType">
+    <operation name="registerClient">
+      <input message="tns:RegisterClientRequest"/>
+      <output message="tns:RegisterClientResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="WalletBinding" type="tns:WalletPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="registerClient">
+      <soap:operation soapAction="http://example.com/wallet#registerClient"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WalletService">
+    <port name="WalletPort" binding="tns:WalletBinding">
+      <soap:address location="http://localhost:3000/wsdl"/>
+    </port>
+  </service>
+</definitions>
