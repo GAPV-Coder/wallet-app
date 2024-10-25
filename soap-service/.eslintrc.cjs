@@ -31,5 +31,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'object-curly-newline': 'off',
     'no-underscore-dangle': 'off',
+    'no-restricted-globals': 'off',
   },
 };

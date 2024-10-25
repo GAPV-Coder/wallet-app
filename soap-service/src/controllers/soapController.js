@@ -1,5 +1,6 @@
+/* eslint-disable import/named */
 /* eslint-disable import/extensions */
-import { registerClient } from '../services/serviceMethods.js';
+import { rechargeWallet, registerClient } from '../services/serviceMethods.js';
 
 export const service = {
     WalletService: {
@@ -14,6 +15,15 @@ export const service = {
                     code_error: response.code_error,
                     message_error: response.message_error,
                     data: JSON.stringify(response.data),
+                };
+            },
+            rechargeWallet: async (args) => {
+                const { document, phone, amount } = args;
+                const response = await rechargeWallet({ document, phone, amount });
+                return {
+                    success: response.success,
+                    code_error: response.code_error,
+                    message_error: response.message_error,
                 };
             },
         },
