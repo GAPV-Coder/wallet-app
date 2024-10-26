@@ -1,6 +1,8 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable import/no-named-as-default-member */
 /* eslint-disable import/extensions */
+import { generateTokenAndSessionId } from '../helpers/generateTokenAndSessionId.js';
+import { sendPaymentMail } from '../helpers/sendEmail.js';
 import ClientModel from '../models/client.model.js';
 
 export const registerClient = async ({ document, name, email, phone }) => {
@@ -73,6 +75,57 @@ export const rechargeWallet = async ({ document, phone, amount }) => {
             code_error: '02',
             message_error: 'Recharge failed',
             data: null,
+        };
+    }
+};
+
+export const pay = async ({ document, phone, amount }) => {
+    try {
+        const client = await ClientModel.findOne({ document, phone });
+
+        if (!client) {
+            return {
+                success: false,
+                code_error: '01',
+                message_error: 'Client not found',
+            };
+        }
+
+        if (client.balance < amount) {
+            return {
+                success: false,
+                code_error: '05',
+                message_error: 'Insufficient balance',
+            };
+        }
+
+        const { sessionId, token } = generateTokenAndSessionId();
+
+        client.balance -= amount;
+        await client.save();
+
+        console.log('Preparing to send email to:', client.email);
+        const emailResponse = await sendPaymentMail(client.email, sessionId, token);
+        console.log('Email response:', emailResponse);
+        if (!emailResponse) {
+            return {
+                success: false,
+                code_error: '05',
+                message_error: 'Failed to send confirmation email',
+            };
+        }
+
+        return {
+            success: true,
+            code_error: '00',
+            message_error: 'Payment processed successfully!',
+        };
+    } catch (error) {
+        console.error('Error during payment processing: ', error);
+        return {
+            success: false,
+            code_error: '02',
+            message_error: 'Payment failed',
         };
     }
 };

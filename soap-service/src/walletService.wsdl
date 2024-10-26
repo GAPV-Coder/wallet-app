@@ -49,6 +49,20 @@
         <part name="message_error" type="xsd:string"/>
     </message>
 
+    <message name="PayRequest">
+        <part name="document" type="xsd:string"/>
+        <part name="phone" type="xsd:string"/>
+        <part name="amount" type="xsd:decimal"/>
+    </message>
+
+    <message name="PayResponse">
+        <part name="success" type="xsd:boolean"/>
+        <part name="code_error" type="xsd:string"/>
+        <part name="message_error" type="xsd:string"/>
+        <part name="sessionId" type="xsd:string"/>
+        <part name="token" type="xsd:string"/>
+    </message>
+
     <portType name="WalletPortType">
         <operation name="registerClient">
             <input message="tns:RegisterClientRequest"/>
@@ -57,6 +71,10 @@
         <operation name="rechargeWallet">
             <input message="tns:RechargeWalletRequest"/>
             <output message="tns:RechargeWalletResponse"/>
+        </operation>
+        <operation name="pay">
+            <input message="tns:PayRequest"/>
+            <output message="tns:PayResponse"/>
         </operation>
     </portType>
 
@@ -73,6 +91,15 @@
             </operation>
         <operation name="rechargeWallet">
             <soap:operation soapAction="http://example.com/wallet#rechargeWallet"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="pay">
+            <soap:operation soapAction="http://example.com/wallet#pay"/>
             <input>
                 <soap:body use="literal"/>
             </input>

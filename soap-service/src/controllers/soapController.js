@@ -1,6 +1,6 @@
 /* eslint-disable import/named */
 /* eslint-disable import/extensions */
-import { rechargeWallet, registerClient } from '../services/serviceMethods.js';
+import { pay, rechargeWallet, registerClient } from '../services/serviceMethods.js';
 
 export const service = {
     WalletService: {
@@ -24,6 +24,19 @@ export const service = {
                     success: response.success,
                     code_error: response.code_error,
                     message_error: response.message_error,
+                };
+            },
+            pay: async (args) => {
+                const { document, phone, amount } = args;
+                console.log('Payment request received -->', args);
+                const response = await pay({ document, phone, amount });
+                console.log('Payment response -->', response);
+                return {
+                    success: response.success,
+                    code_error: response.code_error,
+                    message_error: response.message_error,
+                    sessionId: response.sessionId || null,
+                    token: response.token || null,
                 };
             },
         },

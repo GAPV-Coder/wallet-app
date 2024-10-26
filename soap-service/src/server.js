@@ -19,6 +19,12 @@ const app = express();
 const wsdlPath = path.join(__dirname, 'walletService.wsdl');
 const wsdl = fs.readFileSync(wsdlPath, 'utf-8');
 
+// Handler global error
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong');
+});
+
 // Initialize application
 app.listen(PORT, () => {
     const soapServer = soap.listen(app, '/wsdl', service, wsdl);
