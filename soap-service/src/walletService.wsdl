@@ -17,27 +17,7 @@
         <part name="data" type="xsd:string"/>
     </message>
 
-    <portType name="WalletPortType">
-        <operation name="registerClient">
-            <input message="tns:RegisterClientRequest"/>
-            <output message="tns:RegisterClientResponse"/>
-        </operation>
-    </portType>
-
-    <binding name="WalletBinding" type="tns:WalletPortType">
-        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-            <operation name="registerClient">
-                <soap:operation soapAction="http://example.com/wallet#registerClient"/>
-                    <input>
-                        <soap:body use="literal"/>
-                    </input>
-                    <output>
-                        <soap:body use="literal"/>
-                    </output>
-            </operation>
-    </binding>
-
-    <message name="RechargeWalletRequest">
+        <message name="RechargeWalletRequest">
         <part name="document" type="xsd:string"/>
         <part name="phone" type="xsd:string"/>
         <part name="amount" type="xsd:decimal"/>
@@ -72,7 +52,32 @@
         <part name="success" type="xsd:boolean"/>
         <part name="code_error" type="xsd:string"/>
         <part name="message_error" type="xsd:string"/>
-    </message>  
+    </message>
+
+    <message name="GetBalanceRequest">
+        <part name="document" type="xsd:string"/>
+        <part name="phone" type="xsd:string"/>
+    </message>
+
+    <message name="GetBalanceResponse">
+        <part name="success" type="xsd:boolean"/>
+        <part name="code_error" type="xsd:string"/>
+        <part name="message_error" type="xsd:string"/>
+        <part name="balance" type="xsd:decimal"/>
+    </message> 
+
+    <binding name="WalletBinding" type="tns:WalletPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <operation name="registerClient">
+                <soap:operation soapAction="http://example.com/wallet#registerClient"/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+            </operation>
+    </binding> 
 
     <portType name="WalletPortType">
         <operation name="registerClient">
@@ -90,6 +95,10 @@
         <operation name="confirmPayment">
             <input message="tns:ConfirmPaymentRequest"/>
             <output message="tns:ConfirmPaymentResponse"/>
+        </operation>
+        <operation name="getBalance">
+            <input message="tns:GetBalanceRequest"/>
+            <output message="tns:GetBalanceResponse"/>
         </operation>
     </portType>
 
@@ -130,9 +139,17 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+        <operation name="getBalance">
+            <soap:operation soapAction="http://example.com/wallet#getBalance"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
         </operation>
     </binding>
-
 
     <service name="WalletService">
         <port name="WalletPort" binding="tns:WalletBinding">

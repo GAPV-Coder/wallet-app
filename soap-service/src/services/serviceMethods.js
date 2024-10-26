@@ -193,3 +193,30 @@ export const confirmPayment = async ({ sessionId, token }) => {
         };
     }
 };
+
+export const getBalance = async ({ document, phone }) => {
+    try {
+        const client = await ClientModel.findOne({ document, phone });
+        if (!client) {
+            return {
+                success: false,
+                code_error: '01',
+                message_error: 'Client not found',
+            };
+        }
+
+        return {
+            success: true,
+            code_error: '00',
+            balance: client.balance,
+            message_error: 'Balance retreived sucessfully',
+        };
+    } catch (error) {
+        console.error('Error during balance check: ', error);
+        return {
+            success: false,
+            code_error: '02',
+            message_error: 'Failed to retreive balance',
+        };
+    }
+};
