@@ -8,6 +8,7 @@ const ClientSchema = new mongoose.Schema({
     balance: { type: Number, default: 0 },
     sessionId: { type: String },
     token: { type: String },
+    currentTransactionAmount: { type: Number },
 });
 
 const ClientModel = mongoose.model('Client', ClientSchema);

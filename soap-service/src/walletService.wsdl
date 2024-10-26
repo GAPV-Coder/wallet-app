@@ -63,6 +63,17 @@
         <part name="token" type="xsd:string"/>
     </message>
 
+    <message name="ConfirmPaymentRequest">
+        <part name="sessionId" type="xsd:string"/>
+        <part name="token" type="xsd:string"/>
+    </message>
+
+    <message name="ConfirmPaymentResponse">
+        <part name="success" type="xsd:boolean"/>
+        <part name="code_error" type="xsd:string"/>
+        <part name="message_error" type="xsd:string"/>
+    </message>  
+
     <portType name="WalletPortType">
         <operation name="registerClient">
             <input message="tns:RegisterClientRequest"/>
@@ -75,6 +86,10 @@
         <operation name="pay">
             <input message="tns:PayRequest"/>
             <output message="tns:PayResponse"/>
+        </operation>
+        <operation name="confirmPayment">
+            <input message="tns:ConfirmPaymentRequest"/>
+            <output message="tns:ConfirmPaymentResponse"/>
         </operation>
     </portType>
 
@@ -100,6 +115,15 @@
         </operation>
         <operation name="pay">
             <soap:operation soapAction="http://example.com/wallet#pay"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="confirmPayment">
+            <soap:operation soapAction="http://example.com/wallet#confirmPayment"/>
             <input>
                 <soap:body use="literal"/>
             </input>

@@ -101,8 +101,15 @@ export const pay = async ({ document, phone, amount }) => {
 
         const { sessionId, token } = generateTokenAndSessionId();
 
-        client.balance -= amount;
+        client.sessionId = sessionId;
+        client.token = token;
+        client.currentTransactionAmount = amount;
         await client.save();
+        console.log('Datos guardados en pay:', {
+            sessionId: client.sessionId,
+            token: client.token,
+            currentTransactionAmount: client.currentTransactionAmount,
+        });
 
         console.log('Preparing to send email to:', client.email);
         const emailResponse = await sendPaymentMail(client.email, sessionId, token);
@@ -126,6 +133,63 @@ export const pay = async ({ document, phone, amount }) => {
             success: false,
             code_error: '02',
             message_error: 'Payment failed',
+        };
+    }
+};
+
+export const confirmPayment = async ({ sessionId, token }) => {
+    const validateToken = async (token) => {
+        const tokenFound = await ClientModel.findOne({ token });
+        if (!tokenFound) {
+            return false;
+        }
+        return true;
+    };
+
+    try {
+        const isValidToken = await validateToken(token);
+        if (!isValidToken) {
+            return {
+                success: false,
+                code_error: '03',
+                message_error: 'Invalid token',
+            };
+        }
+
+        const client = await ClientModel.findOne({ sessionId, token });
+        if (!client) {
+            return {
+                success: false,
+                code_error: '01',
+                message_error: 'Client not found',
+            };
+        }
+
+        const amount = client.currentTransactionAmount;
+        if (client.balance < amount) {
+            return {
+                success: false,
+                code_error: '05',
+                message_error: 'Insufficient balance',
+            };
+        }
+
+        client.balance -= amount;
+        client.currentTransactionAmount = undefined;
+        client.token = undefined;
+        client.sessionId = undefined;
+        await client.save();
+        return {
+            success: true,
+            code_error: '00',
+            message_error: 'Payment confirmed sucessfully',
+        };
+    } catch (error) {
+        console.error('Error during payment confirmation: ', error);
+        return {
+            success: false,
+            code_error: '02',
+            message_error: 'Payment confirmation failed',
         };
     }
 };

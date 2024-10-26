@@ -33,5 +33,6 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'no-restricted-globals': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'no-shadow': 'off',
   },
 };

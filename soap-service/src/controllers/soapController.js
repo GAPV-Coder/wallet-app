@@ -1,15 +1,13 @@
 /* eslint-disable import/named */
 /* eslint-disable import/extensions */
-import { pay, rechargeWallet, registerClient } from '../services/serviceMethods.js';
+import { confirmPayment, pay, rechargeWallet, registerClient } from '../services/serviceMethods.js';
 
 export const service = {
     WalletService: {
         WalletPort: {
             registerClient: async (args) => {
                 const { document, name, email, phone } = args;
-                console.log('Request received on server -->', args);
                 const response = await registerClient({ document, name, email, phone });
-                console.log('User registration response -->', response);
                 return {
                     success: response.success,
                     code_error: response.code_error,
@@ -37,6 +35,15 @@ export const service = {
                     message_error: response.message_error,
                     sessionId: response.sessionId || null,
                     token: response.token || null,
+                };
+            },
+            confirmPayment: async (args) => {
+                const { sessionId, token } = args;
+                const response = await confirmPayment({ sessionId, token });
+                return {
+                    success: response.success,
+                    code_error: response.code_error,
+                    message_error: response.message_error,
                 };
             },
         },
