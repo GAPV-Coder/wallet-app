@@ -1,22 +1,22 @@
 /* eslint-disable import/extensions */
 import nodemailer from 'nodemailer';
-import config from '../configuration/config.js';
 
-// const { EMAIL, PASSWORD } = config;
+const userGmail = 'gpereiravilla@gmail.com';
+const passAppGmail = 'xqbm surx diut hhjn';
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.mailersend.net',
+    service: 'gmail',
     port: 587,
     secure: false,
     auth: {
-        user: config.SMTP_EMAIL,
-        pass: config.SMTP_PASSWORD,
+        user: userGmail,
+        pass: passAppGmail,
     },
 });
 
 export const sendPaymentMail = async (email, sessionId, token) => {
     const mailOptions = {
-        from: 'MS_cdRucF@trial-v69oxl5reyrg785k.mlsender.net',
+        from: userGmail,
         to: email,
         subject: 'Payment Confirmation',
         text: `Your payment confirmation for session ${sessionId} is: ${token}`,
