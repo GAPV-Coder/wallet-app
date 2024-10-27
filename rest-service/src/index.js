@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import config from './config/config.js';
+import routes from './routes/index.js';
 
 const { port } = config || 8080;
 
@@ -26,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// Routes
+app.use('/api/v1/', routes);
 
 // Initialize application
 const httpServer = app.listen(port, () => {
