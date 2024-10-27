@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable import/extensions */
 import { convertAndSendtoSoap } from '../helpers/convert.js';
 
@@ -46,8 +47,17 @@ export const paymentService = async ({ document, phone, amount }) => {
 export const paymentConfirmationService = async ({ sessionId, token }) => {
     try {
         const response = await convertAndSendtoSoap('confirmPayment', { sessionId, token });
-        console.log('Response payment confirmation:', response);
+        return response;
     } catch (error) {
         console.error('Error in payment confirmation service:', error);
+    }
+};
+
+export const getBalanceService = async ({ document, phone }) => {
+    try {
+        const response = await convertAndSendtoSoap('getBalance', { document, phone });
+        return response;
+    } catch (error) {
+        console.error('Error in get balance service:', error);
     }
 };

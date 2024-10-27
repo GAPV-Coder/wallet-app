@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 import { validationResult } from 'express-validator';
-import { paymentConfirmationService, paymentService, rechargeWalletService, registerClientService } from '../services/client.services.js';
+import { getBalanceService, paymentConfirmationService, paymentService, rechargeWalletService, registerClientService } from '../services/client.services.js';
 
 export const registerClientController = async (req, res) => {
     const errors = validationResult(req);
@@ -65,6 +65,21 @@ export const paymentConfirmationController = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             message: `Error when confirming payment: ${error.message}`,
+        });
+    }
+};
+
+export const getBalanceController = async (req, res) => {
+    const { document, phone } = req.body;
+    try {
+        const response = await getBalanceService({ document, phone });
+        res.status(200).json({
+            message: 'Balance retrieved successfully',
+            data: response,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: `Error when retrieving balance: ${error.message}`,
         });
     }
 };
