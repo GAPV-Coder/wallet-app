@@ -27,6 +27,12 @@ export const paymentService = async ({ document, phone, amount }) => {
         const response = await convertAndSendtoSoap('pay', { document, phone, amount });
         console.log('Response paymentService:', response);
 
+        if (response && typeof response === 'object') {
+            const msg = response.message || 'No message available';
+        } else {
+            console.error('Unexpected response: null value or not an object');
+        }
+
         if (!response || !response.success) {
             throw new Error('Invalid or unsuccessful SOAP response');
         }
@@ -34,5 +40,14 @@ export const paymentService = async ({ document, phone, amount }) => {
     } catch (error) {
         console.error('Error in payment service:', error);
         throw new Error(`Error when making payment: ${error.message}`);
+    }
+};
+
+export const paymentConfirmationService = async ({ sessionId, token }) => {
+    try {
+        const response = await convertAndSendtoSoap('confirmPayment', { sessionId, token });
+        console.log('Response payment confirmation:', response);
+    } catch (error) {
+        console.error('Error in payment confirmation service:', error);
     }
 };
