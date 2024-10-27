@@ -22,7 +22,12 @@ export const convertAndSendtoSoap = async (operation, jsonData) => {
         // Send the XML request to the SOAP service
         const soapResponse = await axios.post(soap_url, xmlRequest, {
             headers: { 'Content-Type': 'text/xml' },
+            timeout: 7000,
         });
+
+        if (!soapResponse || !soapResponse.data) {
+            throw new Error('Empty or undefined response from SOAP service');
+        }
 
         // Convert XML response to JSON
         const jsonResponse = JSON.parse(xml2json(soapResponse.data, { compact: true }));
@@ -37,9 +42,7 @@ export const convertAndSendtoSoap = async (operation, jsonData) => {
 
         return jsonResponse;
     } catch (error) {
-        if (error.message) {
-            console.error('SOAP Error response', error.response.data);
-        }
+        console.error('SOAP Error response', error);
         throw new Error(`Error communicating with SOAP service: ${error.message}`);
     }
 };

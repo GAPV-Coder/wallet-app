@@ -21,3 +21,18 @@ export const rechargeWalletService = async ({ document, phone, amount }) => {
         throw new Error(`Error when recharging wallet: ${error.message}`);
     }
 };
+
+export const paymentService = async ({ document, phone, amount }) => {
+    try {
+        const response = await convertAndSendtoSoap('pay', { document, phone, amount });
+        console.log('Response paymentService:', response);
+
+        if (!response || !response.success) {
+            throw new Error('Invalid or unsuccessful SOAP response');
+        }
+        return response;
+    } catch (error) {
+        console.error('Error in payment service:', error);
+        throw new Error(`Error when making payment: ${error.message}`);
+    }
+};
